@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: html-container
-        image: html-app
-        imagePullPolicy: Never
+        image: vijaydevops769/html-app:v1
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 80
