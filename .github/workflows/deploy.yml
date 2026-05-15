@@ -3,13 +3,15 @@ name: Docker Build and Push
 on:
   push:
 
+permissions:
+  contents: write
+
 jobs:
   docker:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: Checkout Code
+    - name: Checkout
       uses: actions/checkout@v4
 
     - name: Docker Login
@@ -19,18 +21,16 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: |
-        docker build -t vijaydevops769/html-app:${{ github.run_number }} ./html-project/app
+      run: docker build -t vijaydevops769/html-app:${{ github.run_number }} ./html-project/app
 
     - name: Push Docker Image
-      run: |
-        docker push vijaydevops769/html-app:${{ github.run_number }}
+      run: docker push vijaydevops769/html-app:${{ github.run_number }}
 
     - name: Update Kubernetes Deployment File
       run: |
         sed -i 's|image: .*|image: vijaydevops769/html-app:${{ github.run_number }}|g' html-project/k8s/deployment.yaml
 
-    - name: Commit Updated deployment.yaml
+    - name: Commit and Push Changes
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "actions@github.com"
