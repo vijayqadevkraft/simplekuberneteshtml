@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t yourdockerhub/html-app:v1 ./app
+      run: docker build -t vijaydevops769/html-app:v1 ./app
 
     - name: Push Docker Image
-      run: docker push yourdockerhub/html-app:v1
+      run: docker push vijaydevops769/html-app:v1
