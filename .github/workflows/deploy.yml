@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout Code
       uses: actions/checkout@v4
 
@@ -39,4 +40,3 @@ jobs:
         git commit -m "Updated image to version ${{ github.run_number }}" || echo "No changes"
 
         git push
-        
