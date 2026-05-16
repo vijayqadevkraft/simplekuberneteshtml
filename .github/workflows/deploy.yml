@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: DevSecOps GitOps Pipeline
 
 on:
   push:
@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
+
+    - name: Checkout Code
       uses: actions/checkout@v4
 
     - name: Docker Login
@@ -21,10 +22,18 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t vijaydevops769/html-app:${{ github.run_number }} ./html-project/app
+      run: |
+        docker build -t vijaydevops769/html-app:${{ github.run_number }} ./html-project/app
+
+    - name: Run Trivy Security Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: vijaydevops769/html-app:${{ github.run_number }}
+        format: table
 
     - name: Push Docker Image
-      run: docker push vijaydevops769/html-app:${{ github.run_number }}
+      run: |
+        docker push vijaydevops769/html-app:${{ github.run_number }}
 
     - name: Update Kubernetes Deployment File
       run: |
