@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: html-container
-        image: vijaydevops769/html-app:20
+        image: vijaydevops769/html-app:21
         imagePullPolicy: Always
 
         ports:
