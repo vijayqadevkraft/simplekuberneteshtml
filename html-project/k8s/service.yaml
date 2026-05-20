@@ -6,7 +6,7 @@ metadata:
   namespace: html-app
 
 spec:
-  type: NodePort
+  type: ClusterIP
 
   selector:
     app: html-app
@@ -14,4 +14,3 @@ spec:
   ports:
   - port: 80
     targetPort: 80
-    nodePort: 30007
