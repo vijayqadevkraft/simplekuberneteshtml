@@ -6,6 +6,8 @@ metadata:
   namespace: html-app
 
 spec:
+  ingressClassName: nginx
+
   rules:
   - http:
       paths:
