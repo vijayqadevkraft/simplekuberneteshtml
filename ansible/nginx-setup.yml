@@ -1,0 +1,42 @@
+---
+- name: Configure Nginx Reverse Proxy
+  hosts: webservers
+  become: yes
+
+  vars:
+    kubeconfig_path: /home/ubuntu/.kube/config
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Get ingress NodePort dynamically
+      shell: kubectl --kubeconfig={{ kubeconfig_path }} get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.ports[0].nodePort}'
+      register: ingress_port
+
+    - name: Show detected port
+      debug:
+        msg: "Detected Ingress NodePort is {{ ingress_port.stdout }}"
+
+    - name: Configure Nginx dynamically
+      copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          server {
+              listen 80;
+              server_name _;
+
+              location / {
+                  proxy_pass http://localhost:{{ ingress_port.stdout }};
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+              }
+          }
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
